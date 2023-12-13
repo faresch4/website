@@ -11,11 +11,11 @@ function Start({onClickBtn}) {
   return <button onClick={onClickBtn}>Go to game Start</button>
 }
 
-
 // Defining the Board component
 
 export default function Board() {
   const [isX , setIsX] = useState(true) //tracking the state of the current square(if is X or O) to decide the order of the next move
+  const [nextPlayer ,setNextPlayer] = useState(`Next player is X`)
   let [squares,setSquares] = useState(Array(9).fill(null)) // defining a squares array of 9 elements with initial value of null
   function handleClick(i) { //THis function tells us what to do once we click the button returned by Square
     let nextSquare = squares.slice() // Making a copy of squares array  recommende for immutation
@@ -25,19 +25,21 @@ export default function Board() {
        
       }else {   // if we are on the O order
         nextSquare[i] = 'O'
-       
       }
+    
       setSquares(nextSquare)  // We change the initial squares array that has null values with a new nextSquares array that has the updated element values
       setIsX(!isX) // Now we change the order between X and O's
-     
+   
+      setNextPlayer(`Next player is ${isX ? 'O' : 'X'}`)
     }
+   
   }
   function  gameStart() {
         setSquares(Array(9).fill(null))
-        console.log(squares)
 
   }
   function CalculateWinner() {
+
     const winningCombinations = [
       [0, 1, 2],
       [3, 4, 5],
@@ -51,17 +53,27 @@ export default function Board() {
     for(let combo of winningCombinations) {
   
       if(squares[combo[0]] == squares[combo[1]] &&  squares[combo[1]] == squares[combo[2]]) {
-        if(squares[combo[0]] !== null) {
-          return <span>{squares[combo[1]]} is a winner !</span>
+        if(squares[combo[0]] !== null) {   // This returns true of false whenever we call the calculateWinner in the line 22
+          return (
+            <>
+             <span>{squares[combo[1]]} is a winner !</span> 
+             
+            </>
+          
+
+
+          )
         }
        
-      }else {
-        if (squares.every((el) => el !== null)) {
+      }else if(squares.every((el) => el !== null)) { // The CalculateWinner function returns true boolean
+        
           return 'This game is a draw';
+      }
+      // }else {
+  
+      // }
         }
       }
-    }
-  }
     return( // This is what it will be shown in the UI .
       <>
         <div className="board-row">
@@ -85,6 +97,7 @@ export default function Board() {
         <CalculateWinner />
         <br></br>
         <Start onClickBtn = {gameStart} />
+        <span>{nextPlayer}</span>
         </div>
       
       </>
