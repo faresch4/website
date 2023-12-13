@@ -16,7 +16,7 @@ export default function Board() {
   let [squares,setSquares] = useState(Array(9).fill(null)) // defining a squares array of 9 elements with initial value of null
   function handleClick(i) { //THis function tells us what to do once we click the button returned by Square
     let nextSquare = squares.slice() // Making a copy of squares array  recommende for immutation
-    if(!squares[i]) { // if the value of an element in the squares array is null we change it with 'X'
+    if(!squares[i] && !CalculateWinner() ) { // if the value of an element in the squares array is null we change it with 'X'
       if(isX) { //checking if we are on the X order
         nextSquare[i] = 'X'
        
@@ -29,9 +29,35 @@ export default function Board() {
      
     }
   }
+  function CalculateWinner() {
+    const winningCombinations = [
+      [0, 1, 2],
+      [3, 4, 5],
+      [6, 7, 8], // rows
+      [0, 3, 6],
+      [1, 4, 7],
+      [2, 5, 8], // columns
+      [0, 4, 8],
+      [2, 4, 6], // diagonals
+    ];
+    for(let combo of winningCombinations) {
+  
+      if(squares[combo[0]] == squares[combo[1]] &&  squares[combo[1]] == squares[combo[2]]) {
+        if(squares[combo[0]] !== null) {
+          return <span>{squares[combo[1]]} is a winner !</span>
+        }
+       
+      }else {
+        if (squares.every((el) => el !== null)) {
+          return 'This game is a draw';
+        }
+      }
+    }
+  }
     return( // This is what it will be shown in the UI .
       <>
         <div className="board-row">
+        
         <Square value={squares[0]}  onCLickSquare = {() => handleClick(0)}/>
         <Square value={squares[1]}  onCLickSquare = {() => handleClick(1)} />
         <Square value={squares[2]}  onCLickSquare = {() => handleClick(2)} />
@@ -45,6 +71,9 @@ export default function Board() {
         <Square value={squares[6]}  onCLickSquare = {() => handleClick(6)}/>
         <Square value={squares[7]}  onCLickSquare = {() => handleClick(7)} />
         <Square value={squares[8]}  onCLickSquare = {() => handleClick(8)} />
+        </div>
+        <div className='Winner'>
+        <CalculateWinner />
         </div>
       
       </>
