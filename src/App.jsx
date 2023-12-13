@@ -6,7 +6,10 @@ function Square({value, onCLickSquare}) {  //Defining the square component and p
   return <button className="square" onClick={onCLickSquare}>{value}</button>
 }
 
-
+function Start({onClickBtn}) {
+  
+  return <button onClick={onClickBtn}>Go to game Start</button>
+}
 
 
 // Defining the Board component
@@ -28,6 +31,11 @@ export default function Board() {
       setIsX(!isX) // Now we change the order between X and O's
      
     }
+  }
+  function  gameStart() {
+        setSquares(Array(9).fill(null))
+        console.log(squares)
+
   }
   function CalculateWinner() {
     const winningCombinations = [
@@ -73,7 +81,10 @@ export default function Board() {
         <Square value={squares[8]}  onCLickSquare = {() => handleClick(8)} />
         </div>
         <div className='Winner'>
+     
         <CalculateWinner />
+        <br></br>
+        <Start onClickBtn = {gameStart} />
         </div>
       
       </>
